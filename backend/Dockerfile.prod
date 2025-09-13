@@ -1,0 +1,63 @@
+# Etapa de construcción
+FROM python:3.9-slim as builder
+
+# Establecer variables de entorno
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Instalar dependencias del sistema
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc \
+        postgresql-server-dev-all \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de requisitos
+COPY requirements.txt .
+
+# Instalar dependencias de Python
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Etapa de producción
+FROM python:3.9-slim
+
+# Establecer variables de entorno
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Instalar dependencias del sistema mínimas
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear usuario no root
+RUN adduser --disabled-password --gecos '' appuser
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar dependencias de la etapa de construcción
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+
+# Copiar código de la aplicación
+COPY ./app /app/app
+
+# Copiar archivo principal
+COPY ./main.py /app/
+
+# Cambiar propietario de los archivos
+RUN chown -R appuser:appuser /app
+
+# Cambiar al usuario no root
+USER appuser
+
+# Exponer puerto
+EXPOSE 8000
+
+# Comando para ejecutar la aplicación
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

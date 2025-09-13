@@ -1,0 +1,14 @@
+# Ejemplo de archivo de variables para Terraform
+# Copiar este archivo a terraform.tfvars y reemplazar con valores reales
+
+# AWS
+aws_account_id = "123456789012"
+vpc_id         = "vpc-12345678"
+subnet_ids     = ["subnet-12345678", "subnet-87654321"]
+
+# Base de datos
+db_username = "kiro_user"
+db_password = "secure_password_123"
+
+# Aplicación
+secret_key  = "your_secret_key_here"
