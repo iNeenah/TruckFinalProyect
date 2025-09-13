@@ -1,4 +1,4 @@
-# Kiro Route Optimizer with AI
+# Truck Route Optimizer with AI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
@@ -8,7 +8,7 @@
 
 > **Advanced AI-Powered Route Optimization System for Transportation Companies in Misiones Province, Argentina**
 
-Kiro is a cutting-edge SaaS web platform designed specifically for transportation companies in Misiones, Argentina. Unlike traditional route planners that focus solely on time optimization, Kiro revolutionizes logistics by optimizing routes based on **total cost** - considering fuel expenses, toll fees, and vehicle efficiency to maximize your operational savings.
+This is a cutting-edge SaaS web platform designed specifically for transportation companies in Misiones, Argentina. Unlike traditional route planners that focus solely on time optimization, this system revolutionizes logistics by optimizing routes based on **total cost** - considering fuel expenses, toll fees, and vehicle efficiency to maximize your operational savings.
 
 ## 🚀 Key Features
 
@@ -64,8 +64,64 @@ Kiro is a cutting-edge SaaS web platform designed specifically for transportatio
 
 ## 📁 Project Architecture
 
+### Diagram
+
 ```
-kiro-route-optimizer/
+graph TB
+    A[Client Browser] --> B[React Frontend]
+    B --> C{API Gateway}
+    
+    C --> D[Auth Service]
+    C --> E[Vehicle Service]
+    C --> F[Route Service]
+    C --> G[Admin Service]
+    C --> H[Report Service]
+    
+    D --> I[(PostgreSQL + PostGIS)]
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+    
+    F --> J[OSRM Engine]
+    B --> K[Mapbox Maps]
+    
+    L[Admin User] --> M[Terraform]
+    M --> N[AWS Cloud]
+    
+    O[GitHub Actions] --> P[Docker Images]
+    P --> Q[Container Registry]
+    Q --> N
+    
+    R[Prometheus] --> S[Grafana]
+    S --> T[Monitoring Dashboard]
+    
+    style A fill:#4285F4,stroke:#333
+    style B fill:#34A853,stroke:#333
+    style C fill:#FBBC05,stroke:#333
+    style D fill:#EA4335,stroke:#333
+    style E fill:#EA4335,stroke:#333
+    style F fill:#EA4335,stroke:#333
+    style G fill:#EA4335,stroke:#333
+    style H fill:#EA4335,stroke:#333
+    style I fill:#4285F4,stroke:#333
+    style J fill:#FBBC05,stroke:#333
+    style K fill:#4285F4,stroke:#333
+    style L fill:#999,stroke:#333
+    style M fill:#FBBC05,stroke:#333
+    style N fill:#34A853,stroke:#333
+    style O fill:#EA4335,stroke:#333
+    style P fill:#FBBC05,stroke:#333
+    style Q fill:#4285F4,stroke:#333
+    style R fill:#FBBC05,stroke:#333
+    style S fill:#34A853,stroke:#333
+    style T fill:#4285F4,stroke:#333
+```
+
+### Directory Structure
+
+```
+truck-route-optimizer/
 ├── backend/                    # FastAPI Python application
 │   ├── app/                    # Core application code
 │   │   ├── api/                # REST API endpoints
@@ -96,302 +152,3 @@ kiro-route-optimizer/
 ├── scripts/                    # Utility scripts
 ├── .github/workflows/          # GitHub Actions CI/CD
 └── docker-compose.yml          # Service orchestration
-```
-
-## 🚀 Quick Start Guide
-
-### Prerequisites
-- **Docker** and **Docker Compose** (v2.0+)
-- **Node.js** 18+ with npm
-- **Python** 3.11+
-- **Git** for version control
-- **6GB+ RAM** recommended for optimal performance
-
-### Installation & Setup
-
-1. **Clone the Repository**
-```bash
-git clone https://github.com/iNeenah/TruckFinalProyect.git
-cd TruckFinalProyect
-```
-
-2. **Environment Configuration**
-```bash
-# Backend environment variables
-cp .env.example .env
-# Edit .env with your configurations
-
-# Frontend environment variables
-cp frontend/.env.example frontend/.env
-# Edit frontend/.env with your configurations
-```
-
-3. **Launch Development Environment**
-```bash
-# Start all services with Docker Compose
-docker-compose up -d
-
-# Install frontend dependencies
-cd frontend
-npm install
-
-# Start frontend development server
-npm run dev
-```
-
-4. **Database Initialization**
-```bash
-# Run database migrations
-cd backend
-alembic upgrade head
-
-# Seed initial data (optional)
-python app/seed_data.py
-```
-
-### Development URLs
-- **Frontend Application**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
-- **Database**: localhost:5432 (PostgreSQL with PostGIS)
-- **OSRM Service**: http://localhost:5000
-- **Mapbox Studio**: Access via Mapbox account
-
-## 🔧 Advanced Development Commands
-
-### Docker Management
-```bash
-# Start all services
-docker-compose up -d
-
-# View service logs
-docker-compose logs -f [service-name]
-
-# Restart specific service
-docker-compose restart [service-name]
-
-# Stop all services
-docker-compose down
-
-# Clean slate (remove volumes)
-docker-compose down -v
-
-# Build services from scratch
-docker-compose build --no-cache
-```
-
-### Backend Development
-```bash
-# Navigate to backend directory
-cd backend
-
-# Run development server
-uvicorn main:app --reload
-
-# Run tests with coverage
-pytest --cov=app tests/
-
-# Run linters
-flake8 app/
-black app/
-isort app/
-
-# Create database migration
-alembic revision --autogenerate -m "Migration description"
-
-# Apply migrations
-alembic upgrade head
-```
-
-### Frontend Development
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Start development server
-npm run dev
-
-# Run tests
-npm run test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run end-to-end tests
-npm run cypress:open
-
-# Build for production
-npm run build
-
-# Lint code
-npm run lint
-
-# Fix linting issues
-npm run lint:fix
-```
-
-### Data & Services Management
-```bash
-# Download OSRM data for Argentina
-make download-osrm-data
-
-# Reset database
-make db-reset
-
-# Run database migrations
-make db-migrate
-
-# Format codebase
-make format
-
-# Run all tests
-make test
-```
-
-## 🧪 Testing Strategy
-
-### Backend Testing
-- **Unit Tests**: Service layer functionality testing
-- **Integration Tests**: API endpoint validation
-- **Contract Tests**: Data validation and schema compliance
-- **Performance Tests**: Load and stress testing
-
-### Frontend Testing
-- **Unit Tests**: Component and hook testing with Jest
-- **Integration Tests**: Page and workflow validation
-- **End-to-End Tests**: Cypress for user journey testing
-- **Snapshot Tests**: UI consistency verification
-
-### Test Coverage
-- **Backend**: 95%+ code coverage target
-- **Frontend**: 90%+ component coverage target
-
-## 📊 Monitoring & Observability
-
-### Performance Metrics
-- **API Response Times**: Track endpoint latency
-- **Database Queries**: Monitor query performance
-- **Memory Usage**: Container resource monitoring
-- **Error Rates**: Exception and failure tracking
-
-### Logging Strategy
-- **Structured Logging**: JSON-formatted application logs
-- **Request Tracing**: Correlation IDs for request tracking
-- **Audit Logs**: Security and access logging
-- **Error Tracking**: Centralized exception reporting
-
-## 🔒 Security Features
-
-### Authentication & Authorization
-- **JWT Token Management**: Secure token generation and validation
-- **Role-Based Access Control**: Admin/operator permission levels
-- **Session Management**: Secure session handling
-- **Password Security**: bcrypt hashing with salt
-
-### Data Protection
-- **Encryption at Rest**: Database encryption
-- **Encryption in Transit**: TLS/SSL for all communications
-- **Input Validation**: Comprehensive data sanitization
-- **Rate Limiting**: API request throttling
-
-## 🚀 Production Deployment
-
-### Infrastructure Requirements
-- **AWS Services**: ECS, RDS, S3, CloudFront, Route 53
-- **Container Registry**: ECR for Docker images
-- **Load Balancing**: Application Load Balancer
-- **Monitoring**: CloudWatch, Prometheus, Grafana
-
-### Deployment Process
-1. **Infrastructure Provisioning**: Terraform scripts for AWS setup
-2. **CI/CD Pipeline**: GitHub Actions for automated deployment
-3. **Container Building**: Docker images for frontend and backend
-4. **Service Deployment**: ECS orchestration
-5. **Monitoring Setup**: Logging and alerting configuration
-
-### Scalability Features
-- **Horizontal Scaling**: Load-balanced container instances
-- **Database Scaling**: RDS read replicas and auto-scaling
-- **Content Delivery**: CDN for static assets
-- **Caching Strategy**: Redis for performance optimization
-
-## 📚 Documentation
-
-### API Documentation
-- **Swagger UI**: Interactive API documentation at `/docs`
-- **ReDoc**: Alternative API documentation at `/redoc`
-- **Postman Collection**: Exportable API testing collection
-
-### Developer Guides
-- **Backend Development**: Service architecture and patterns
-- **Frontend Development**: Component design and state management
-- **Database Schema**: Entity relationship diagrams
-- **Deployment Guide**: Production deployment procedures
-
-### User Documentation
-- **User Manual**: End-user operation guide
-- **Administrator Guide**: System administration procedures
-- **API Reference**: Detailed API endpoint documentation
-- **Troubleshooting**: Common issues and solutions
-
-## 🤝 Contributing
-
-We welcome contributions from the community! To contribute:
-
-1. **Fork the Repository**
-```bash
-git fork https://github.com/iNeenah/TruckFinalProyect.git
-```
-
-2. **Create a Feature Branch**
-```bash
-git checkout -b feature/amazing-new-feature
-```
-
-3. **Make Your Changes**
-- Follow coding standards and best practices
-- Write comprehensive tests
-- Update documentation as needed
-
-4. **Commit Your Changes**
-```bash
-git commit -m "Add amazing new feature"
-```
-
-5. **Push to Your Fork**
-```bash
-git push origin feature/amazing-new-feature
-```
-
-6. **Open a Pull Request**
-- Provide detailed description of changes
-- Link related issues
-- Request review from maintainers
-
-### Code Quality Standards
-- **Backend**: PEP 8 compliance, type hints, docstrings
-- **Frontend**: TypeScript strict mode, ESLint, Prettier
-- **Testing**: 90%+ code coverage requirement
-- **Documentation**: Clear, comprehensive documentation
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **OpenStreetMap** for providing map data
-- **OSRM** for route calculation algorithms
-- **Mapbox** for mapping visualization tools
-- **PostGIS** for geospatial database capabilities
-- **All contributors** who have helped shape this project
-
-## 📞 Support
-
-For support, please open an issue on GitHub or contact the development team at support@kiro.com.
-
----
-
-<p align="center">
-  <strong>Built with ❤️ for transportation companies in Misiones, Argentina</strong>
-</p>
